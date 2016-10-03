@@ -26,6 +26,7 @@ endif(COMMAND cmake_policy)
 include(ExternalProject)
 PROJECT(XBotCoreModel)
 
+# C++ 11
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
 check_cxx_compiler_flag("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -51,12 +52,12 @@ file(GLOB_RECURSE XBotCoreModel_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *
 
 ADD_LIBRARY(XBotCoreModel SHARED ${XBotCoreModel_INCLUDES} src/XBotCoreModel.cpp)
 
-TARGET_LINK_LIBRARIES(XBotCoreModel   ${srdfdom_advr_LIBRARIES} 
-                            ${urdfdom_LIBRARIES}
-			    ${Boost_LIBRARIES}
-                            /usr/lib/x86_64-linux-gnu/libyaml-cpp.so
-                            ${kdl_parser_LIBRARIES}
-		     )
+TARGET_LINK_LIBRARIES(XBotCoreModel ${srdfdom_advr_LIBRARIES} 
+                                    ${urdfdom_LIBRARIES}
+                                    ${Boost_LIBRARIES}
+                                    yaml-cpp
+                                    ${kdl_parser_LIBRARIES}
+                                    )
 
 ########################################################################
 
