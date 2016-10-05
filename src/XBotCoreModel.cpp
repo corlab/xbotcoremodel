@@ -76,10 +76,16 @@ bool XBot::XBotCoreModel::parseSRDF() {
             }
 
         }
-        // TBD not a kinematic chain : check for FT or IMU
+        // NOTE not a kinematic chain : check for FT 
         else {
-
+            if(actual_groups[i].name_ == "force_torque_sensors") {
+                for(int j = 0; j < actual_groups[i].joints_.size(); j++) {
+                    ft_sensors[actual_groups[i].joints_[j]] = joint2Rid(actual_groups[i].joints_[j]);
+                }
+            }
+            
         }
+        // TBD IMU
 
     }
 

@@ -49,10 +49,22 @@ private:
     
         
     /**
-     * @brief map between the chain name and the id of the enabled joints in the chain 
+     * @brief map between the chain name and the ids of the enabled joints in the chain 
      * 
      */
     std::map<std::string, std::vector<int>> robot;
+    
+    /**
+     * @brief map between the chain name and the names of the enabled joints in the chain 
+     * 
+     */
+    std::map<std::string, std::vector<std::string>> robot_string;
+    
+     /**
+     * @brief map between the chain name and the id of the ft_sensors
+     * 
+     */
+    std::map<std::string, int> ft_sensors;
     
     /**
      * @brief map between joint robot id and joint name
@@ -78,8 +90,9 @@ private:
     
     // map for the disabled joints in chains
     std::map<std::string, std::vector<std::string>> disabled_joints_in_chains;
+
     
-    // TBD FT sensor and IMU
+    // TBD IMU
 
     
     
@@ -186,6 +199,11 @@ public:
     virtual int joint2Rid(std::string joint_name) final
     {
         return joint2rid.find(joint_name) != joint2rid.end() ? joint2rid[joint_name] : 0;
+    }
+    
+    virtual std::map<std::string,int> get_ft_sensors(void) final
+    {
+        return ft_sensors;
     }
 
     /**
