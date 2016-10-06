@@ -21,6 +21,7 @@
 #include <kdl_parser/kdl_parser.hpp>
 
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <algorithm>
 
@@ -41,6 +42,7 @@ class XBot::XBotCoreModel : public srdf::Model,
 {
 private:
     
+    std::string urdf_string, srdf_string;
     std::string srdf_path;
     std::string joint_map_config_path;
     boost::shared_ptr<urdf::ModelInterface> urdf_model;
@@ -142,7 +144,7 @@ public:
      */
     boost::shared_ptr<urdf::ModelInterface const> get_urdf_model(void) const
     {
-        return urdf_model;
+        return urdf_model; 
     }
     
     /**
@@ -273,6 +275,22 @@ public:
      * @return the number of joint of the requested chain
      */
     int get_joint_num(std::string chain_name) const;
+    
+    /**
+     * @brief Get the robot URDF as a string
+     * 
+     * @return URDF file as a const std::string&
+     */
+    const std::string& get_urdf_string() const;
+    
+    /**
+     * @brief Get the robot SRDF as a string
+     * 
+     * @return SRDF file as a const std::string&
+     */
+    const std::string& get_srdf_string() const;
+    
+    
     
     ~XBotCoreModel() 
     {
