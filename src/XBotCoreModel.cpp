@@ -9,7 +9,7 @@
      #define DPRINTF printf
 #endif
 
-std::shared_ptr<urdf::ModelInterface> XBot::XBotCoreModel::loadURDF(const std::string& filename)
+boost::shared_ptr<urdf::ModelInterface> XBot::XBotCoreModel::loadURDF(const std::string& filename)
 {
 
     // get the entire file
@@ -25,12 +25,12 @@ std::shared_ptr<urdf::ModelInterface> XBot::XBotCoreModel::loadURDF(const std::s
         }
         xml_file.close();
 
-        return std::shared_ptr<urdf::ModelInterface>(urdf::parseURDF(xml_string).get());
+        return urdf::parseURDF(xml_string);
     }
     else
     {
         throw std::runtime_error("Could not open file " + filename + " for parsing.");
-        return std::shared_ptr<urdf::ModelInterface>();
+        return boost::shared_ptr<urdf::ModelInterface>();
     }
 }
 
@@ -128,7 +128,7 @@ bool XBot::XBotCoreModel::get_joints_in_chain(  std::string base_link,
     return false;
 }
 
-bool XBot::XBotCoreModel::get_enabled_joints_in_chain( std::string chain_name, std::vector<std::string>& enabled_joints)
+bool XBot::XBotCoreModel::get_enabled_joints_in_chain( std::string chain_name, std::vector<std::string>& enabled_joints) const
 {
     // check if the chain exists
     if( enabled_joints_in_chains.count(chain_name) ) {
@@ -141,7 +141,7 @@ bool XBot::XBotCoreModel::get_enabled_joints_in_chain( std::string chain_name, s
     return false;
 }
 
-bool XBot::XBotCoreModel::get_disabled_joints_in_chain( std::string chain_name, std::vector<std::string>& disabled_joints)
+bool XBot::XBotCoreModel::get_disabled_joints_in_chain( std::string chain_name, std::vector<std::string>& disabled_joints) const
 {
     // check if the chain exists
     if( enabled_joints_in_chains.count(chain_name) ) {
@@ -248,7 +248,7 @@ void XBot::XBotCoreModel::generate_robot(void)
     }
 }
 
-bool XBot::XBotCoreModel::get_enabled_joint_ids_in_chain(std::string chain_name, std::vector< int >& joint_ids)
+bool XBot::XBotCoreModel::get_enabled_joint_ids_in_chain(std::string chain_name, std::vector< int >& joint_ids) const
 {
     // check if the chain exists
     if( robot.count(chain_name) ) {
@@ -262,7 +262,7 @@ bool XBot::XBotCoreModel::get_enabled_joint_ids_in_chain(std::string chain_name,
 }
 
 
-void XBot::XBotCoreModel::get_enabled_joint_ids(std::vector< int >& joint_ids)
+void XBot::XBotCoreModel::get_enabled_joint_ids(std::vector< int >& joint_ids) const
 {
     joint_ids.clear();
     for(const auto& c : robot) {
@@ -271,7 +271,7 @@ void XBot::XBotCoreModel::get_enabled_joint_ids(std::vector< int >& joint_ids)
 }
 
 
-void XBot::XBotCoreModel::get_enabled_joint_names(std::vector< std::string >& joint_names)
+void XBot::XBotCoreModel::get_enabled_joint_names(std::vector< std::string >& joint_names) const
 {
     joint_names.clear();
     for(const auto& c : enabled_joints_in_chains) {
@@ -280,7 +280,7 @@ void XBot::XBotCoreModel::get_enabled_joint_names(std::vector< std::string >& jo
 }
 
 
-int XBot::XBotCoreModel::get_joint_num(const std::string& chain_name)
+int XBot::XBotCoreModel::get_joint_num(std::string chain_name) const
 {
     // check if the chain exists
     if( enabled_joints_in_chains.count(chain_name) ) {
@@ -293,7 +293,7 @@ int XBot::XBotCoreModel::get_joint_num(const std::string& chain_name)
 }
 
 
-int XBot::XBotCoreModel::get_joint_num()
+int XBot::XBotCoreModel::get_joint_num() const
 {
     return joint_num;
 }

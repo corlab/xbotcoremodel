@@ -43,7 +43,7 @@ private:
     
     std::string srdf_path;
     std::string joint_map_config_path;
-    std::shared_ptr<urdf::ModelInterface> urdf_model;
+    boost::shared_ptr<urdf::ModelInterface> urdf_model;
     KDL::Tree robot_tree;
     
         
@@ -101,9 +101,9 @@ private:
      * @brief load the URDF filename
      * 
      * @param filename the URDF filename
-     * @return std::shared_ptr< urdf::ModelInterface > the URDF model interface
+     * @return boost::shared_ptr< urdf::ModelInterface > the URDF model interface
      */
-    std::shared_ptr<urdf::ModelInterface> loadURDF(const std::string& filename);
+    boost::shared_ptr<urdf::ModelInterface> loadURDF(const std::string& filename);
     
     
     /**
@@ -140,7 +140,7 @@ public:
      * 
      * @return std::shared_ptr< urdf::ModelInterface > the URDF ModelInterface
      */
-    std::shared_ptr<urdf::ModelInterface const> get_urdf_model(void) const
+    boost::shared_ptr<urdf::ModelInterface const> get_urdf_model(void) const
     {
         return urdf_model;
     }
@@ -160,7 +160,7 @@ public:
      * 
      * @return std::vector< std::::string> the chain names vector
      */
-    std::vector<std::string> get_chain_names(void) 
+    std::vector<std::string> get_chain_names(void) const 
     {
         return chain_names;
     }
@@ -221,7 +221,7 @@ public:
      * @param enabled_joints vector that will be filled with the enabled joint names
      * @return bool true if the chain exists, false otherwise
      */
-    bool get_enabled_joints_in_chain( std::string chain_name, std::vector<std::string>& enabled_joints);
+    bool get_enabled_joints_in_chain( std::string chain_name, std::vector<std::string>& enabled_joints) const;
 
 
     /**
@@ -231,7 +231,7 @@ public:
      * @param disabled_joints vector that will be filled with the disabled joint names
      * @return bool true if the chain exists, false otherwise
      */
-    bool get_disabled_joints_in_chain( std::string chain_name, std::vector<std::string>& disabled_joints);
+    bool get_disabled_joints_in_chain( std::string chain_name, std::vector<std::string>& disabled_joints) const;
     
     
     /**
@@ -240,7 +240,7 @@ public:
      * @param joint_names array of the joint names filled by this function
      * @return void
      */
-    void get_enabled_joint_names(std::vector<std::string>& joint_names);
+    void get_enabled_joint_names(std::vector<std::string>& joint_names) const;
     
     /**
      * @brief get the vector of the enabled joint ids of the whole robot
@@ -248,7 +248,7 @@ public:
      * @param joint_names array of the joint ids filled by this function
      * @return void
      */
-    void get_enabled_joint_ids(std::vector<int>& joint_ids);
+    void get_enabled_joint_ids(std::vector<int>& joint_ids) const;
     
     /**
      * @brief get the vector of the joint ids of the requested chain
@@ -257,14 +257,14 @@ public:
      * @param joint_names array of the joint ids of the requested chain filled by this function
      * @return void
      */
-    bool get_enabled_joint_ids_in_chain(std::string chain_name, std::vector<int>& joint_ids);
+    bool get_enabled_joint_ids_in_chain(std::string chain_name, std::vector<int>& joint_ids) const;
     
     /**
      * @brief get the number of joint in the robot
      * 
      * @return the number of joint of the robot
      */
-    int get_joint_num();
+    int get_joint_num() const;
     
     /**
      * @brief get the number of joint of a requested chain
@@ -272,7 +272,7 @@ public:
      * @param chain_name the requested chain
      * @return the number of joint of the requested chain
      */
-    int get_joint_num(std::string chain_name);
+    int get_joint_num(std::string chain_name) const;
     
     ~XBotCoreModel() 
     {
