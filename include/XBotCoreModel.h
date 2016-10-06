@@ -22,7 +22,6 @@
 
 #include <fstream>
 #include <stdexcept>
-#include <boost/lexical_cast.hpp>
 #include <algorithm>
 
 #include <yaml-cpp/yaml.h>
@@ -44,7 +43,7 @@ private:
     
     std::string srdf_path;
     std::string joint_map_config_path;
-    boost::shared_ptr<urdf::ModelInterface> urdf_model;
+    std::shared_ptr<urdf::ModelInterface> urdf_model;
     KDL::Tree robot_tree;
     
         
@@ -77,7 +76,9 @@ private:
      * 
      */
     Joint2RidMap joint2rid;
-        
+    
+    // enabled joint number of the robot
+    int joint_num = 0;
     
     // vector for the chain names
     std::vector<std::string> chain_names;
@@ -100,9 +101,9 @@ private:
      * @brief load the URDF filename
      * 
      * @param filename the URDF filename
-     * @return boost::shared_ptr< urdf::ModelInterface > the URDF model interface
+     * @return std::shared_ptr< urdf::ModelInterface > the URDF model interface
      */
-    boost::shared_ptr<urdf::ModelInterface> loadURDF(const std::string& filename);
+    std::shared_ptr<urdf::ModelInterface> loadURDF(const std::string& filename);
     
     
     /**
@@ -137,9 +138,9 @@ public:
     /**
      * @brief getter for the URDF ModelInterface
      * 
-     * @return boost::shared_ptr< urdf::ModelInterface > the URDF ModelInterface
+     * @return std::shared_ptr< urdf::ModelInterface > the URDF ModelInterface
      */
-    boost::shared_ptr<urdf::ModelInterface> get_urdf_model(void)
+    std::shared_ptr<urdf::ModelInterface const> get_urdf_model(void) const
     {
         return urdf_model;
     }
@@ -184,11 +185,22 @@ public:
      */
     bool init(const std::string& urdf_filename, const std::string& srdf_filename);
     
+    /**
+     * @brief dynamically generate the robot as a map {chain_name} -> {vector of enabled joints}
+     * 
+     * @param  ...
+     * @return void
+     */
     void generate_robot(void);
     
     virtual std::map<std::string, std::vector<int>> get_robot(void) final
     {
         return robot;
+    }
+    
+    virtual std::map<std::string,int> get_ft_sensors(void) final
+    {
+        return ft_sensors;
     }
           
     virtual std::string rid2Joint(int rId) final
@@ -201,10 +213,6 @@ public:
         return joint2rid.find(joint_name) != joint2rid.end() ? joint2rid[joint_name] : 0;
     }
     
-    virtual std::map<std::string,int> get_ft_sensors(void) final
-    {
-        return ft_sensors;
-    }
 
     /**
      * @brief getter for the enabled joints vector in the chain
@@ -225,6 +233,46 @@ public:
      */
     bool get_disabled_joints_in_chain( std::string chain_name, std::vector<std::string>& disabled_joints);
     
+    
+    /**
+     * @brief get the vector of the enabled joint names of the whole robot
+     * 
+     * @param joint_names array of the joint names filled by this function
+     * @return void
+     */
+    void get_enabled_joint_names(std::vector<std::string>& joint_names);
+    
+    /**
+     * @brief get the vector of the enabled joint ids of the whole robot
+     * 
+     * @param joint_names array of the joint ids filled by this function
+     * @return void
+     */
+    void get_enabled_joint_ids(std::vector<int>& joint_ids);
+    
+    /**
+     * @brief get the vector of the joint ids of the requested chain
+     * 
+     * @param chain_name the requested chain
+     * @param joint_names array of the joint ids of the requested chain filled by this function
+     * @return void
+     */
+    bool get_enabled_joint_ids_in_chain(std::string chain_name, std::vector<int>& joint_ids);
+    
+    /**
+     * @brief get the number of joint in the robot
+     * 
+     * @return the number of joint of the robot
+     */
+    int get_joint_num();
+    
+    /**
+     * @brief get the number of joint of a requested chain
+     * 
+     * @param chain_name the requested chain
+     * @return the number of joint of the requested chain
+     */
+    int get_joint_num(std::string chain_name);
     
     ~XBotCoreModel() 
     {
