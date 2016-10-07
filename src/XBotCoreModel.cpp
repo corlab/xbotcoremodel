@@ -197,6 +197,17 @@ bool XBot::XBotCoreModel::init(const std::string& urdf_filename,
 
     // load SRDF model from file
     bool ret = this->initFile(*urdf_model, srdf_filename);
+    
+    // save urdf and srdf as strings (can be useful to have!)
+    std::ifstream t_urdf(urdf_filename);
+    std::stringstream buffer_urdf;
+    buffer_urdf << t_urdf.rdbuf();
+    urdf_string = buffer_urdf.str();
+    
+    std::ifstream t_srdf(urdf_filename);
+    std::stringstream buffer_srdf;
+    buffer_srdf << t_srdf.rdbuf();
+    srdf_string = buffer_srdf.str();
 
     // parse the SRDF file and fill the data structure
     return (ret && parseSRDF());
@@ -298,5 +309,13 @@ int XBot::XBotCoreModel::get_joint_num() const
     return joint_num;
 }
 
+const std::string& XBot::XBotCoreModel::get_srdf_string() const
+{
+ return srdf_string;
+}
 
+const std::string& XBot::XBotCoreModel::get_urdf_string() const
+{
+  return urdf_string;
+}
 
