@@ -77,16 +77,27 @@ bool XBot::XBotCoreModel::parseSRDF() {
             }
 
         }
-        // NOTE not a kinematic chain : check for FT 
+        // NOTE not a kinematic chain : check for FT, IMU or other groups
         else {
             if(actual_groups[i].name_ == "force_torque_sensors") {
                 for(int j = 0; j < actual_groups[i].joints_.size(); j++) {
                     ft_sensors[actual_groups[i].joints_[j]] = joint2Rid(actual_groups[i].joints_[j]);
                 }
             }
-            
-        }
+            // LEGS
+            else if(actual_groups[i].name_ == "legs") {
+                for(int j = 0; j < actual_groups[i].subgroups_.size(); j++) {
+                    legs_names[j] = actual_groups[i].subgroups_[j];
+                }
+            }
+            // ARMS
+            else if(actual_groups[i].name_ == "arms") {
+                for(int j = 0; j < actual_groups[i].subgroups_.size(); j++) {
+                    arms_names[j] = actual_groups[i].subgroups_[j];
+                }
+            }
         // TBD IMU
+        }
 
     }
     return true;
@@ -244,6 +255,7 @@ void XBot::XBotCoreModel::generate_robot(void)
 {
     // generate the robot : map between tha chain name and the joint ids of the chain
     std::vector<std::string> actual_chain_names = get_chain_names();
+    actual_chain_names.resize(actual_chain_names.size());
     for( int i = 0; i < actual_chain_names.size(); i++) {
         std::vector<std::string> enabled_joints_name_aux;
         std::vector<int> enabled_joints_id_aux;
@@ -256,6 +268,12 @@ void XBot::XBotCoreModel::generate_robot(void)
             robot[actual_chain_names[i]] = enabled_joints_id_aux;
             joint_num += enabled_joints_id_aux.size();
         }
+    }
+    
+    // initialize robot map specific data
+    int pos = 0;
+    for(const auto& c : robot) {
+        ordered_chain_names[pos++] = c.first;
     }
 }
 
@@ -271,7 +289,6 @@ bool XBot::XBotCoreModel::get_enabled_joint_ids_in_chain(std::string chain_name,
     DPRINTF("ERROR: requested chain in get_enabled_joints_in_chain() does not exist.\n");
     return false;
 }
-
 
 void XBot::XBotCoreModel::get_enabled_joint_ids(std::vector< int >& joint_ids) const
 {
@@ -317,5 +334,15 @@ const std::string& XBot::XBotCoreModel::get_srdf_string() const
 const std::string& XBot::XBotCoreModel::get_urdf_string() const
 {
   return urdf_string;
+}
+
+const std::vector< std::string >& XBot::XBotCoreModel::get_legs_chain() const
+{
+    return legs_names;
+}
+
+const std::vector< std::string >& XBot::XBotCoreModel::get_arms_chain() const
+{
+    return arms_names;
 }
 

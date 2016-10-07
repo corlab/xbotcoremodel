@@ -85,6 +85,15 @@ private:
     // vector for the chain names
     std::vector<std::string> chain_names;
     
+    // vector for the chain names
+    std::vector<std::string> ordered_chain_names;
+    
+    // vector for the chain names of the legs ORDERED as the SRDF
+    std::vector<std::string> legs_names;
+    
+    // vector for the chain names of the arms ORDERED as the SRDF
+    std::vector<std::string> arms_names;
+    
     // vector for the disabled joints
     std::vector<std::string> disabled_joint_names;
     
@@ -165,6 +174,16 @@ public:
     std::vector<std::string> get_chain_names(void) const 
     {
         return chain_names;
+    }
+    
+    /**
+     * @brief getter for the alphabetically ordered chain names vector
+     * 
+     * @return std::vector< std::::string> the chain names vector
+     */
+    std::vector<std::string> get_ordered_chain_names(void) const 
+    {
+        return ordered_chain_names;
     }
     
     /**
@@ -290,7 +309,19 @@ public:
      */
     const std::string& get_srdf_string() const;
     
+    /**
+     * @brief Get the legs chain names ordered as in the SRDF
+     * 
+     * @return the legs chain names ordered as in the SRDF
+     */
+    const std::vector<std::string>& get_legs_chain() const;
     
+    /**
+     * @brief Get the arms chain names ordered as in the SRDF
+     * 
+     * @return the arms chain names ordered as in the SRDF
+     */
+    const std::vector<std::string>& get_arms_chain() const;
     
     ~XBotCoreModel() 
     {
