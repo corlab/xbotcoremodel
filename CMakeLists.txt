@@ -45,7 +45,10 @@ FIND_PACKAGE(urdfdom REQUIRED)
 FIND_PACKAGE(Boost REQUIRED)
 FIND_PACKAGE(kdl_parser REQUIRED)
 
-INCLUDE_DIRECTORIES(include ${srdfdom_advr_INCLUDE_DIRS} ${urdfdom_INCLUDE_DIRS} ${kdl_parser_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(include 
+                    ${srdfdom_advr_INCLUDE_DIRS} 
+                    ${urdfdom_INCLUDE_DIRS} 
+                    ${kdl_parser_INCLUDE_DIRS})
 
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotCoreModel_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
