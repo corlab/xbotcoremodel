@@ -87,13 +87,13 @@ bool XBot::XBotCoreModel::parseSRDF() {
             // LEGS
             else if(actual_groups[i].name_ == "legs") {
                 for(int j = 0; j < actual_groups[i].subgroups_.size(); j++) {
-                    legs_names[j] = actual_groups[i].subgroups_[j];
+                    legs_names.push_back(actual_groups[i].subgroups_[j]);
                 }
             }
             // ARMS
             else if(actual_groups[i].name_ == "arms") {
                 for(int j = 0; j < actual_groups[i].subgroups_.size(); j++) {
-                    arms_names[j] = actual_groups[i].subgroups_[j];
+                    arms_names.push_back(actual_groups[i].subgroups_[j]);
                 }
             }
         // TBD IMU
@@ -273,7 +273,7 @@ void XBot::XBotCoreModel::generate_robot(void)
     // initialize robot map specific data
     int pos = 0;
     for(const auto& c : robot) {
-        ordered_chain_names[pos++] = c.first;
+        ordered_chain_names.push_back(c.first);
     }
 }
 
