@@ -171,7 +171,7 @@ public:
      * 
      * @return std::vector< std::::string> the chain names vector
      */
-    std::vector<std::string> get_chain_names(void) const 
+    const std::vector<std::string>& get_chain_names(void) const 
     {
         return chain_names;
     }
@@ -181,7 +181,7 @@ public:
      * 
      * @return std::vector< std::::string> the chain names vector
      */
-    std::vector<std::string> get_ordered_chain_names(void) const 
+    const std::vector<std::string>& get_ordered_chain_names(void) const 
     {
         return ordered_chain_names;
     }
