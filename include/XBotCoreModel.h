@@ -37,7 +37,7 @@ namespace XBot
 typedef std::map<int, std::string>  Rid2JointMap;
 typedef std::map<std::string, int>  Joint2RidMap;
 
-class XBot::XBotCoreModel : public srdf::Model,
+class XBot::XBotCoreModel : public srdf_advr::Model,
                             public XBot::IXBotModel
 {
 private:
