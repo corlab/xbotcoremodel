@@ -118,8 +118,8 @@ bool XBot::XBotCoreModel::get_joints_in_chain(  std::string base_link,
 
             // if the joint is revolute or prismatic
             if ( actual_joint.getTypeName() == "RotAxis"   ||
-                 actual_joint.getTypeName() == "TransAxis" ||  // TBD check this if needed
-                 actual_joint.getName() == "l_handj" || actual_joint.getName() == "r_handj") {   // TBD check the model for the hands
+                 actual_joint.getTypeName() == "TransAxis"/* ||  // TBD check this if needed
+                 actual_joint.getName() == "l_handj" || actual_joint.getName() == "r_handj"*/) {   // TBD check the model for the hands
 
                 // if the joint is enabled
                 if( !(std::find(disabled_joint_names.begin(), disabled_joint_names.end(), actual_joint.getName()) != disabled_joint_names.end() ) ) {
