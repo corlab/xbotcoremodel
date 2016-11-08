@@ -68,6 +68,12 @@ private:
     std::map<std::string, int> ft_sensors;
     
     /**
+     * @brief map between the chain name and the id of the imu_sensors
+     * 
+     */
+    std::map<std::string, int> imu_sensors;
+    
+    /**
      * @brief map between joint robot id and joint name
      * 
      */
@@ -223,6 +229,11 @@ public:
     {
         return ft_sensors;
     }
+    
+    virtual std::map<std::string, int> get_imu_sensors() final
+    {
+        return imu_sensors;
+    }
           
     virtual std::string rid2Joint(int rId) final
     {
@@ -322,6 +333,8 @@ public:
      * @return the arms chain names ordered as in the SRDF
      */
     const std::vector<std::string>& get_arms_chain() const;
+    
+    bool check_joint_limits() const;
     
     ~XBotCoreModel() 
     {

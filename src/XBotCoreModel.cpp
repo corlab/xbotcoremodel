@@ -79,9 +79,16 @@ bool XBot::XBotCoreModel::parseSRDF() {
         }
         // NOTE not a kinematic chain : check for FT, IMU or other groups
         else {
+            // FT
             if(actual_groups[i].name_ == "force_torque_sensors") {
                 for(int j = 0; j < actual_groups[i].joints_.size(); j++) {
                     ft_sensors[actual_groups[i].joints_[j]] = joint2Rid(actual_groups[i].joints_[j]);
+                }
+            }
+            // IMU
+            if(actual_groups[i].name_ == "imu_sensors") {
+                for(int j = 0; j < actual_groups[i].joints_.size(); j++) {
+                    imu_sensors[actual_groups[i].joints_[j]] = -1; // TBD meaningful IDs? -1 means no ecat slave? 
                 }
             }
             // LEGS
@@ -196,6 +203,9 @@ bool XBot::XBotCoreModel::init(const std::string& urdf_filename,
 
     // load URDF model from file
     urdf_model = loadURDF(urdf_filename);
+    
+    // check that all prismatic and revolute joints have their limits specified in the URDF!
+    bool joint_limits_ok = check_joint_limits();
 
     // parse the Joint map
     parseJointMap();
@@ -221,7 +231,7 @@ bool XBot::XBotCoreModel::init(const std::string& urdf_filename,
     srdf_string = buffer_srdf.str();
 
     // parse the SRDF file and fill the data structure
-    return (ret && parseSRDF());
+    return (ret && parseSRDF() && joint_limits_ok);
 }
 
 bool XBot::XBotCoreModel::init(const std::string& urdf_filename, const std::string& srdf_filename)
@@ -234,6 +244,9 @@ bool XBot::XBotCoreModel::init(const std::string& urdf_filename, const std::stri
 
     // load URDF model from file
     urdf_model = loadURDF(urdf_filename);
+    
+    // check that all prismatic and revolute joints have their limits specified in the URDF!
+    bool joint_limits_ok = check_joint_limits();
 
     // parse the Joint map
     //parseJointMap();
@@ -248,7 +261,7 @@ bool XBot::XBotCoreModel::init(const std::string& urdf_filename, const std::stri
     bool ret = this->initFile(*urdf_model, srdf_filename);
 
     // parse the SRDF file and fill the data structure
-    return (ret && parseSRDF());
+    return (ret && parseSRDF() && joint_limits_ok);
 }
 
 void XBot::XBotCoreModel::generate_robot(void)
@@ -345,4 +358,24 @@ const std::vector< std::string >& XBot::XBotCoreModel::get_arms_chain() const
 {
     return arms_names;
 }
+
+bool XBot::XBotCoreModel::check_joint_limits() const
+{
+    for( const auto& j_pair : urdf_model->joints_ ){
+        
+        const urdf::Joint& joint = *j_pair.second;
+        
+        if(joint.type == urdf::Joint::REVOLUTE || joint.type == urdf::Joint::PRISMATIC){
+            if(joint.limits->upper <= joint.limits->lower){
+                std::cerr << "ERROR in " << __func__ << "! All revolute and prismatic joints must have their joint limits specified inside the URDF, with upper limit > lower limit." << std::endl;
+                return false;
+            }
+        }
+        
+    }
+    
+    return true;
+}
+
+
 
