@@ -42,8 +42,8 @@ endif()
 
 FIND_PACKAGE(srdfdom_advr REQUIRED)
 FIND_PACKAGE(urdfdom REQUIRED)
-FIND_PACKAGE(Boost REQUIRED)
 FIND_PACKAGE(kdl_parser REQUIRED)
+FIND_PACKAGE(Boost REQUIRED)
 
 INCLUDE_DIRECTORIES(include 
                     ${srdfdom_advr_INCLUDE_DIRS} 
@@ -61,6 +61,13 @@ TARGET_LINK_LIBRARIES(XBotCoreModel ${srdfdom_advr_LIBRARIES}
                                     yaml-cpp
                                     ${kdl_parser_LIBRARIES}
                                     )
+                                    
+target_include_directories( XBotCoreModel PUBLIC
+                                ${srdfdom_advr_INCLUDE_DIRS}
+                                ${urdfdom_INCLUDE_DIRS}
+                                ${kdl_parser_INCLUDE_DIRS}
+                          )
+
 
 ########################################################################
 

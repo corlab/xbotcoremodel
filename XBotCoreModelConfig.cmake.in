@@ -1,0 +1,21 @@
+set(XBotCoreModel_VERSION @XBotCoreModel_VERSION@)
+
+@PACKAGE_INIT@
+
+set_and_check(XBotCoreModel_INCLUDEDIR "@PACKAGE_XBotCoreModel_INCLUDEDIR@")
+include(CMakeFindDependencyMacro)
+
+find_dependency(srdfdom_advr)
+find_dependency(urdfdom)
+find_dependency(kdl_parser)
+
+
+if(NOT TARGET XBotCoreModel::XBotCoreModel)
+  include("${CMAKE_CURRENT_LIST_DIR}/XBotCoreModelTargets.cmake")
+endif()
+
+# Compatibility
+set(XBotCoreModel_LIBRARIES XBotCoreModel::XBotCoreModel)
+set(XBotCoreModel_INCLUDE_DIRS ${XBotCoreModel_INCLUDEDIR})
+
+
