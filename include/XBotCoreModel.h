@@ -100,6 +100,10 @@ private:
     // vector for the chain names of the arms ORDERED as the SRDF
     std::vector<std::string> arms_names;
     
+    // vector for the controlled joint name, i.e. joints that are labelled
+    // as fixed in the URDF and, nonetheless, are controlled (e.g. hand motors)
+    std::vector<std::string> controlled_joints;
+    
     // vector for the disabled joints
     std::vector<std::string> disabled_joint_names;
     

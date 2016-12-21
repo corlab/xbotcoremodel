@@ -48,6 +48,13 @@ bool XBot::XBotCoreModel::parseSRDF() {
     for(int i = 0; i < chain_num; i++) {
         chain_names[i] = (actual_groups[group_num - 1].subgroups_[i]);
     }
+    
+    // find controlled_joints group
+    for(int i = 0; i < group_num; i++) {
+        if( actual_groups[i].name_ == "controlled_joints"){
+            controlled_joints = actual_groups[i].joints_;
+        }
+    }
 
     // put the disabled joint in the disabled_joint_names data structure
     int disabled_joint_num = actual_disabled_joints.size();
@@ -115,6 +122,8 @@ bool XBot::XBotCoreModel::get_joints_in_chain(  std::string base_link,
                                                 std::vector<std::string>& enabled_joints_in_chain,
                                                 std::vector<std::string>& disabled_joints_in_chain)
 {
+    
+//     getGroups().at("controlled_joints")->joints_
 
     KDL::Chain actual_chain;
     if( robot_tree.getChain(base_link, tip_link, actual_chain) ) {
@@ -122,10 +131,24 @@ bool XBot::XBotCoreModel::get_joints_in_chain(  std::string base_link,
         for( int i = 0; i < segments_num; i++) {
             KDL::Segment actual_segment = actual_chain.getSegment(i);
             KDL::Joint actual_joint = actual_segment.getJoint();
+            
+            // Check if the joint is to be included in the chain, i.e. it is either a revolute,
+            // prismatic, or fixed joint belonging to the controlled_joints group
+            
+            bool is_valid_joint = false;
+            
+            // Check if joint is revolute or prismatic
+            is_valid_joint = actual_joint.getTypeName() == "RotAxis"   ||
+                 actual_joint.getTypeName() == "TransAxis";
+            
+            // Check if joint belongs to controlled_joints group
+            is_valid_joint = is_valid_joint || ( std::find(controlled_joints.begin(), 
+                                                         controlled_joints.end(), 
+                                                         actual_joint.getName()) != controlled_joints.end() );
 
+            
             // if the joint is revolute or prismatic
-            if ( actual_joint.getTypeName() == "RotAxis"   ||
-                 actual_joint.getTypeName() == "TransAxis"/* ||  // TBD check this if needed
+            if ( is_valid_joint /* ||  // TBD check this if needed
                  actual_joint.getName() == "l_handj" || actual_joint.getName() == "r_handj"*/) {   // TBD check the model for the hands
 
                 // if the joint is enabled
