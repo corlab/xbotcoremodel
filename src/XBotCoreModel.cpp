@@ -40,21 +40,28 @@ bool XBot::XBotCoreModel::parseSRDF() {
     std::vector<DisabledJoint> actual_disabled_joints = getDisabledJoints();
 
     int group_num = actual_groups.size();
-
-    // NOTE the last group is the "chains" group
-    int chain_num = actual_groups[group_num - 1].subgroups_.size();
-    chain_names.resize(chain_num);
-    // fill the chain names vector
-    for(int i = 0; i < chain_num; i++) {
-        chain_names[i] = (actual_groups[group_num - 1].subgroups_[i]);
-    }
     
-    // find controlled_joints group
+    srdf_advr::Model::Group chains_group;
+    
+    // find controlled_joints group and chains group
     for(int i = 0; i < group_num; i++) {
         if( actual_groups[i].name_ == "controlled_joints"){
             controlled_joints = actual_groups[i].joints_;
         }
+        if( actual_groups[i].name_ == "chains"){
+            chains_group = actual_groups[i];
+        }
     }
+
+    // NOTE the last group is the "chains" group
+    int chain_num = chains_group.subgroups_.size();
+    chain_names.resize(chain_num);
+    // fill the chain names vector
+    for(int i = 0; i < chain_num; i++) {
+        chain_names[i] = (chains_group.subgroups_[i]);
+    }
+    
+    
 
     // put the disabled joint in the disabled_joint_names data structure
     int disabled_joint_num = actual_disabled_joints.size();
