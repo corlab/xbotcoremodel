@@ -26,6 +26,7 @@ endif(COMMAND cmake_policy)
 include(ExternalProject)
 PROJECT(XBotCoreModel)
 
+# C++ 11
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
 check_cxx_compiler_flag("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -49,27 +50,38 @@ link_directories(SYSTEM ${urdf_LIBRARY_DIRS})
 message(STATUS "urdf_LIBRARY_DIRS: ${urdf_LIBRARY_DIRS}")
 message(STATUS "urdf_LIBRARIES: ${urdf_LIBRARIES}")
 
-FIND_PACKAGE(Boost REQUIRED)
-
+FIND_PACKAGE(urdfdom REQUIRED)
 FIND_PACKAGE(kdl_parser REQUIRED)
 message(STATUS "kdl_parser_INCLUDE_DIRS: ${kdl_parser_INCLUDE_DIRS}")
 link_directories(SYSTEM ${kdl_parser_LIBRARY_DIRS})
 message(STATUS "kdl_parser_LIBRARY_DIRS: ${kdl_parser_LIBRARY_DIRS}")
-message(STATUS "kdl_parser_LIBRARIES: ${kdl_parser_LIBRARIES}")
+message(STATUS "kdl_parser_LIBRARIES: ${kdl_parser_LIBRARIES}"
 
-INCLUDE_DIRECTORIES(include ${srdfdom_advr_INCLUDE_DIRS} ${kdl_parser_INCLUDE_DIRS})
+FIND_PACKAGE(Boost REQUIRED)
+
+INCLUDE_DIRECTORIES(include 
+                    ${srdfdom_advr_INCLUDE_DIRS} 
+                    ${urdfdom_INCLUDE_DIRS} 
+                    ${kdl_parser_INCLUDE_DIRS})
 
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotCoreModel_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
 ADD_LIBRARY(XBotCoreModel SHARED ${XBotCoreModel_INCLUDES} src/XBotCoreModel.cpp)
 
-TARGET_LINK_LIBRARIES(XBotCoreModel   ${srdfdom_advr_LIBRARIES} 
-                            ${urdf_LIBRARIES}
-			    ${Boost_LIBRARIES}
-                            /usr/lib/x86_64-linux-gnu/libyaml-cpp.so
-                            ${kdl_parser_LIBRARIES}
-		     )
+TARGET_LINK_LIBRARIES(XBotCoreModel ${srdfdom_advr_LIBRARIES} 
+                                    ${urdfdom_LIBRARIES}
+                                    ${Boost_LIBRARIES}
+                                    yaml-cpp
+                                    ${kdl_parser_LIBRARIES}
+                                    )
+                                    
+target_include_directories( XBotCoreModel PUBLIC
+                                ${srdfdom_advr_INCLUDE_DIRS}
+                                ${urdfdom_INCLUDE_DIRS}
+                                ${kdl_parser_INCLUDE_DIRS}
+                          )
+
 
 ########################################################################
 
