@@ -55,7 +55,7 @@ FIND_PACKAGE(kdl_parser REQUIRED)
 message(STATUS "kdl_parser_INCLUDE_DIRS: ${kdl_parser_INCLUDE_DIRS}")
 link_directories(SYSTEM ${kdl_parser_LIBRARY_DIRS})
 message(STATUS "kdl_parser_LIBRARY_DIRS: ${kdl_parser_LIBRARY_DIRS}")
-message(STATUS "kdl_parser_LIBRARIES: ${kdl_parser_LIBRARIES}"
+message(STATUS "kdl_parser_LIBRARIES: ${kdl_parser_LIBRARIES}")
 
 FIND_PACKAGE(Boost REQUIRED)
 
