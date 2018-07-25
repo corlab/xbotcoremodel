@@ -101,8 +101,15 @@ bool XBot::XBotCoreModel::parseSRDF() {
             }
             // IMU
             if(actual_groups[i].name_ == "imu_sensors") {
-                for(int j = 0; j < actual_groups[i].joints_.size(); j++) {
-                    imu_sensors[actual_groups[i].joints_[j]] = -1; // TBD meaningful IDs? -1 means no ecat slave? 
+                for(int j = 0; j < actual_groups[i].links_.size(); j++) {
+                    auto imu_link = get_urdf_model()->getLink(actual_groups[i].links_[j]);
+                    if(!imu_link){
+                        std::cerr << "ERROR: imu link " << actual_groups[i].links_[j] << " not defined!" << std::endl;
+                        continue;
+                    }
+
+                    int ecat_id = joint2Rid(imu_link->parent_joint->name);
+                    imu_sensors[actual_groups[i].links_[j]] = ecat_id > 0 ? ecat_id : -1*(imu_sensors.size()); // TBD meaningful IDs? -1 means no ecat slave?
                 }
             }
             // LEGS
